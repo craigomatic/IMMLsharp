@@ -50,8 +50,10 @@ namespace IMMLSharp.Scene.Controls
 
         public void ApplyLayout()
         {
-            this.Node.SetWorldPosition(this.WorldPosition.ToUrhoVector3());
-            this.Node.SetWorldRotation(this.WorldRotation.ToQuaternion());
+            this.Node.SetTransform(
+                this.WorldPosition.ToUrhoVector3(),
+                this.WorldRotation.ToQuaternion(),
+                this.WorldSize.ToUrhoVector3());
         }
 
         public void Dispose()
@@ -62,15 +64,15 @@ namespace IMMLSharp.Scene.Controls
 
         public Node Load(Node parentNode)
         {
-            this.Node = parentNode.CreateChild(this.Name);            
-
+            this.Node = parentNode.CreateChild(this.Name);
+                        
             Shape shape = null;
 
             switch (this.Type)
             {
                 case Imml.PrimitiveType.Box:
                     {
-                        shape = this.Node.CreateComponent<Box>();
+                        shape = this.Node.CreateComponent<Box>();                
                         break;
                     }
                 case Imml.PrimitiveType.Cone:
@@ -98,8 +100,6 @@ namespace IMMLSharp.Scene.Controls
             var resourceCache = DIContainer.Get<Urho.Resources.ResourceCache>();
 
             this.LoadMaterials(shape, resourceCache);
-
-            this.LoadCubicElement(this.Node);
             this.ApplyPhysics(this.Node);
 
             return this.Node;
