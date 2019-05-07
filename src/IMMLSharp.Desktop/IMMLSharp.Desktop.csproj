@@ -96,6 +96,9 @@
     <Compile Include="..\IMMLSharp\Scene\Layout\Stack.cs">
       <Link>Scene\Layout\Stack.cs</Link>
     </Compile>
+    <Compile Include="..\IMMLSharp\Services\LocalAndRemoteAcquisitionService.cs">
+      <Link>Services\LocalAndRemoteAcquisitionService.cs</Link>
+    </Compile>
     <Compile Include="Services\CacheService.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

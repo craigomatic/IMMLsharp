@@ -133,6 +133,7 @@
     <Compile Include="Services\CacheService.cs" />
     <Compile Include="Services\InputService.cs" />
     <Compile Include="ImmlElementFactory.cs" />
+    <Compile Include="Services\LocalAndRemoteAcquisitionService.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

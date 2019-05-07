@@ -1,6 +1,7 @@
 ﻿using Imml.Runtime;
 using Imml.Runtime.Services;
 using IMMLSharp.Desktop.Services;
+using IMMLSharp.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -70,7 +71,14 @@ namespace IMMLSharp.Desktop
 
                     var zone = _App.Scene.CreateComponent<Zone>();
 
-                    _Environment = new ImmersiveEnvironment<Node>(serialiser, DIContainer.Get<IResourceAcquisitionService>());
+                    var resourceAcquisitionService = DIContainer.Get<IResourceAcquisitionService>();
+
+                    if (resourceAcquisitionService is LocalAndRemoteAcquisitionService)
+                    {
+                        (resourceAcquisitionService as LocalAndRemoteAcquisitionService).DocumentRootUri = ofd.FileName;
+                    }
+
+                    _Environment = new ImmersiveEnvironment<Node>(serialiser, resourceAcquisitionService);
 
                     //creates the 3d environment based on the MemoryStream passed in (the MemoryStream is the ImmlDocument representation)
                     await _Environment.CreateAsync(new MemoryStream(bytes));
@@ -85,7 +93,6 @@ namespace IMMLSharp.Desktop
 
                     viewport.RenderPath.Append(CoreAssets.PostProcess.BloomHDR);
                     viewport.RenderPath.Append(CoreAssets.PostProcess.FXAA3);
-
 
                     zone.AmbientColor = new Urho.Color(
                         _Environment.Document.GlobalIllumination.R,
@@ -187,7 +194,7 @@ namespace IMMLSharp.Desktop
 
             DIContainer.Register<Urho.Resources.ResourceCache, Urho.Resources.ResourceCache>(new Urho.Resources.ResourceCache());
             DIContainer.Register<ICacheService, CacheService>(new CacheService(_CacheDir, DIContainer.Get<Urho.Resources.ResourceCache>()));
-            DIContainer.Register<IResourceAcquisitionService, ResourceAcquisitionService>(new ResourceAcquisitionService(DIContainer.Get<ICacheService>()));
+            DIContainer.Register<IResourceAcquisitionService, LocalAndRemoteAcquisitionService>(new LocalAndRemoteAcquisitionService(DIContainer.Get<ICacheService>()));
 
             ResourceCache.AutoReloadResources = true;
             Renderer.HDRRendering = true;
