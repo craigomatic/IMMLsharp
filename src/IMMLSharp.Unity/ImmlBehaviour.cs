@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace UnityImml
+namespace IMMLSharp
 {
     public class ImmlBehaviour : MonoBehaviour
     {

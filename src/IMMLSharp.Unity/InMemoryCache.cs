@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnityImml
+namespace IMMLSharp
 {
     public class InMemoryCache : ICacheService
     {

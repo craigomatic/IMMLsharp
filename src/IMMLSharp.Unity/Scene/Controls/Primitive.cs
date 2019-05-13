@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace UnityImml.Scene.Controls
+namespace IMMLSharp.Unity.Scene.Controls
 {
     public class Primitive : Imml.Scene.Controls.Primitive, IRuntimeElement<GameObject>
     {
@@ -113,11 +113,22 @@ namespace UnityImml.Scene.Controls
                         }
                 }                
             }
-            
-            //TODO: apply materials, etc
-            //var meshRenderer = this.Node.GetComponent<MeshRenderer>();
-            //meshRenderer.materials[0].SetColor(Shader.PropertyToID(meshRenderer.materials[0].shader.name), Color.red);
 
+            //just take the first material for now
+            //TODO: support all material groups, textures, etc
+            var material = this.GetMaterialGroup(-1).GetMaterial();
+            var alpha = material.Opacity;
+            var renderer = this.Node.GetComponent<MeshRenderer>();
+
+            renderer.material.shader = UnityEngine.Shader.Find("VertexLit");
+
+            renderer.material.SetColor("_Color", material.Diffuse.ToUnityColor(alpha));
+            renderer.material.SetColor("_SpecColor", material.Specular.ToUnityColor(alpha));
+            renderer.material.SetColor("_Emission", material.Emissive.ToUnityColor(alpha));
+            renderer.material.SetColor("_ReflectColor", material.Ambient.ToUnityColor(alpha));
+            renderer.shadowCastingMode = this.CastShadows ? UnityEngine.Rendering.ShadowCastingMode.On : UnityEngine.Rendering.ShadowCastingMode.Off;
+            renderer.receiveShadows = true;
+            
             return this.Node;
         }
     }

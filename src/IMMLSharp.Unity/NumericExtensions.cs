@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnityImml
+namespace IMMLSharp
 {
     public static class NumericExtensions
     {
@@ -14,6 +14,6 @@ namespace UnityImml
                 vector3.X,
                 vector3.Y,
                 vector3.Z);
-        }
+        }       
     }
 }
