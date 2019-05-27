@@ -32,7 +32,8 @@ namespace IMMLSharp.Services
         {
             //naive implementation, unless http or https assume file on disk
             if (string.IsNullOrWhiteSpace(this.DocumentRootUri) ||
-                this.DocumentRootUri.StartsWith("http"))
+                this.DocumentRootUri.StartsWith("http") ||
+                sourcedElement.Source.StartsWith("http"))
             {
                 return await _HttpAcquisitionService.AcquireResource(sourcedElement);
             }
