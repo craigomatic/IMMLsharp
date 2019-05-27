@@ -14,6 +14,8 @@ namespace IMMLSharp.Scene.Controls
     {
         public Node Node { get; private set; }
 
+        private StaticModel _StaticModel;
+
         public Model()
         {
             this.Size = Imml.Numerics.Vector3.One;
@@ -51,10 +53,17 @@ namespace IMMLSharp.Scene.Controls
 
         public void ApplyLayout()
         {
-            this.Node.SetWorldPosition(this.WorldPosition.ToUrhoVector3());
-            this.Node.SetWorldRotation(this.WorldRotation.ToQuaternion());
+            //put into scene with size scaled to unit of size 1 in the y-axis (uniform scale across x,y,z)
+            var scalingFactor = 1 / _StaticModel.WorldBoundingBox.Size.Y;
 
-            this.Node.SetScale(100);
+            this.Node.SetWorldTransform(this.WorldPosition.ToUrhoVector3(), this.WorldRotation.ToQuaternion(), scalingFactor);
+
+            var requestedScale = new Vector3(
+                this.WorldSize.X * scalingFactor,
+                this.WorldSize.Y * scalingFactor,
+                this.WorldSize.Z * scalingFactor);
+
+            this.Node.SetWorldScale(requestedScale);
         }
 
         public void Dispose()
@@ -75,12 +84,12 @@ namespace IMMLSharp.Scene.Controls
             var hash = this.Source.ToMD5() + fileExtension;
             var model = resourceCache.GetModel(hash);
 
-            var staticModel = this.Node.CreateComponent<StaticModel>();
-            staticModel.Model = model;
+            _StaticModel = this.Node.CreateComponent<StaticModel>();
+            _StaticModel.Model = model;
 
-            staticModel.CastShadows = this.CastShadows;
+            _StaticModel.CastShadows = this.CastShadows;
 
-            this.LoadMaterials(staticModel, resourceCache);
+            this.LoadMaterials(_StaticModel, resourceCache);
             this.ApplyPhysics(this.Node);       
 
             return this.Node;
