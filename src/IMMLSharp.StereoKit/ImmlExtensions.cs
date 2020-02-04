@@ -47,9 +47,8 @@ namespace ImmlSharp.StereoKit
                     var hash = texture.Source.ToMD5() + fileExtension;
                     var path = System.IO.Path.Combine((cacheService as CacheService).CacheDir.Path, hash);
 
-                    //TODO: This is causing SK to crash, so disabling for now
-                    //var mat = model.GetMaterial(0);
-                    //mat.SetTexture("diffuse", Tex.FromFile(path));
+                    var mat = model.GetMaterial(0);
+                    mat.SetTexture("diffuse", Tex.FromFile(path));
                 }
             }
         }
